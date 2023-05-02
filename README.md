@@ -28,6 +28,8 @@ To test the autoencoder we will generate fake abnormal data.
 
 <img src="img/fake_data_generation.png" width="400"/>
 
+Below is a plot of generated abnormal data.
+
 <img src="img/abnormal_data.png" width="400"/>
 
 # LSTM Autoencoder
