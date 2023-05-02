@@ -66,7 +66,7 @@ Plot of losses distributions on training data.
 
 <img src="img/losses_dist.png" width="400"/>
 
-As we can see most of the errors are less than 0.9. So out threshold will be 0.9.
+As we can see most of the errors are less than 0.9. So our threshold will be 0.9.
 
 On train data correct normal predictions: 191/200 (95%).
 
