@@ -55,3 +55,29 @@ Loss on last epoch: train loss 0.5739964389801026 val loss 0.7613655783913352
 We will try to make a prediction and calculate losses on normal data and abnormal generated data.
 
 <img src="img/predict_func.png" width="400"/>
+
+Plot of real data and Autoencoder prediction.
+
+<img src="img/autoencoder_prediction.png" width="400"/>
+
+Plot of losses distributions on training data.
+
+<img src="img/losses_dist.png" width="400"/>
+
+As we can see most of the errors are less than 0.9. So out threshold will be 0.9.
+
+On train data correct normal predictions: 191/200 (95%).
+
+# Prediction on anomaly data
+
+Lets make prediction on anomaly data and calculate the losses.
+
+<img src="img/anomaly_prediction.png" width="400"/>
+
+Plot of losses distributions on anomaly data.
+
+<img src="img/anomaly_loss_dist.png" width="400"/>
+
+As we can see majority of observations have loss more than our threshold.
+
+On abnormal data correct anomaly predictions: 136/200 (68%).
