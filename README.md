@@ -2,6 +2,8 @@
 
 Autoencoder for anomaly detection.
 
+This project is based on https://github.com/curiousily/Getting-Things-Done-with-Pytorch/blob/master/06.time-series-anomaly-detection-ecg.ipynb.
+
 # Dataset
 
 This dataset contains eleven timeseries observations columns and one label column.
@@ -246,31 +248,6 @@ model, history = train_model(
   n_epochs=25
 )
 ```
-Epoch 1: train loss 173.0234485338102 val loss 173.830467045009
-Epoch 2: train loss 170.13741249657676 val loss 163.0115274567667
-Epoch 3: train loss 154.6819239316352 val loss 156.07975191807628
-Epoch 4: train loss 147.51782297085404 val loss 148.47681180408404
-Epoch 5: train loss 135.9457693313517 val loss 138.00253668130665
-Epoch 6: train loss 143.84492511385054 val loss 137.36569093129157
-Epoch 7: train loss 130.370772684344 val loss 127.11624571148403
-Epoch 8: train loss 125.37187593886732 val loss 127.60817854639724
-Epoch 9: train loss 124.75291262087049 val loss 124.86089302616371
-Epoch 10: train loss 127.78743457859227 val loss 156.2758279284763
-Epoch 11: train loss 138.76470264734857 val loss 128.42170825011084
-Epoch 12: train loss 118.95442976629661 val loss 122.7225789447002
-Epoch 13: train loss 114.37499762318518 val loss 116.02722418487153
-Epoch 14: train loss 113.19190553817783 val loss 118.30980463405261
-Epoch 15: train loss 109.76891202139676 val loss 139.655412034481
-Epoch 16: train loss 113.79430273007902 val loss 115.99430659295429
-Epoch 17: train loss 109.29366252541027 val loss 104.59706768614426
-Epoch 18: train loss 149.94063314260964 val loss 168.71225801236307
-Epoch 19: train loss 151.43939749190255 val loss 143.21504854841524
-Epoch 20: train loss 137.14129155992134 val loss 135.81897356489563
-Epoch 21: train loss 131.7732696172242 val loss 130.63898295562558
-Epoch 22: train loss 191.12961369250195 val loss 371.57302069566424
-Epoch 23: train loss 227.30180827962673 val loss 186.358420550254
-Epoch 24: train loss 180.4226437018226 val loss 171.95115998898274
-Epoch 25: train loss 149.87340367753606 val loss 138.49130286623966
 
 # Prediction
 
