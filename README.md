@@ -52,15 +52,89 @@ def create_dataset(df):
   return dataset, seq_len, n_features
   ```
 
-# Abnormal data
+# Anomaly Data Augmentation
 
-To test the autoencoder we will generate fake abnormal data.
+Normal test dataset has 2198 examples, anomaly dataset has only 441 examples.
 
-<img src="img/fake_data_generation.png" width="800"/>
+We will use five functions to augment our anomaly data.
 
-Below is a plot of generated abnormal data.
+```
+def jitter(input_seq, sigma=8):
+    ret = input_seq + np.random.normal(loc=0., scale=sigma, size=input_seq.shape)
+    return ret
+```
 
-<img src="img/abnormal_data.png" width="800"/>
+<img src="img/jittering.png" width="600"/>
+
+```
+def scaling(input_seq):
+  factor = np.random.normal(loc=1., scale=0.5, size=(input_seq.shape[0],input_seq.shape[1]))
+  return np.multiply(input_seq, factor)
+```
+
+<img src="img/scaling.png" width="600"/>
+
+```
+def rotation(input_seq):
+  scale = np.random.choice([-0.8, 0.9], size=(input_seq.shape[0], input_seq.shape[1]))
+  flipped_seq = torch.flip(input_seq, [0, 1])
+  return np.multiply(flipped_seq, scale)
+```
+
+<img src="img/rotation.png" width="600"/>
+
+```
+def permutation(input_seq):
+  orig_steps = np.arange(input_seq.shape[0])
+
+  num_segs = np.random.randint(2, 7)
+  ret = np.zeros_like(input_seq)
+
+  splits = np.array_split(orig_steps, num_segs)
+  warp = np.concatenate(np.random.permutation(splits)).ravel()
+
+  for i in range(input_seq.shape[0]-1):
+    ret[i] = input_seq[warp[i]]
+  
+  return torch.tensor(ret).float()
+```
+
+<img src="img/permutation.png" width="600"/>
+
+```
+def magnitude_warp(input_seq, sigma=0.3):
+  from scipy.interpolate import CubicSpline
+
+  orig_steps = np.arange(input_seq.shape[0])
+  random_warps = np.random.normal(loc=1.0, scale=sigma, size=(input_seq.shape[0], input_seq.shape[1]))
+  warp_steps = (np.linspace(0, input_seq.shape[0], input_seq.shape[0])).T
+
+  ret = np.zeros_like(input_seq)
+
+  warper = CubicSpline(warp_steps, random_warps)(orig_steps)
+
+  ret = np.multiply(test_seq, warper)
+
+  return ret
+```
+ 
+<img src="img/magnitude_warp.png" width="600"/>
+
+To augment our data we will apply three random functions to it.
+
+```
+import random
+
+def sequence_augmentation(input_seq):
+  ret = np.zeros_like(input_seq)
+  aug_func_list = [jitter, scaling, rotation, permutation, magnitude_warp]
+
+  aug_funcs = random.choices(aug_func_list, k=3)
+  for func in aug_funcs:
+    ret = func(input_seq)
+  
+  return ret
+```
 
 # LSTM Autoencoder
 
