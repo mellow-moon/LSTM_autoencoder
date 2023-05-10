@@ -8,6 +8,8 @@ This dataset contains eleven timeseries observations columns and one label colum
 
 <img src="img/1_dataframe.png" width="600"/>
 
+There is 509189 normal observations and 443 anomaly observations.
+
 # Data Split
 
 We will split data into training, validation and test datasets to train our autoencoder.
