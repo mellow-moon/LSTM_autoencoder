@@ -2,31 +2,55 @@
 
 Autoencoder for anomaly detection.
 
-```
-function test() {
-  console.log("notice the blank line before this function?");
-}
-```
+# Dataset
 
-# Daily Female Births Dataset
+This dataset contains eleven timeseries observations columns and one label column.
 
-This dataset describes the number of daily female births in California in 1959. The units are a count and there are 365 observations. The source of the dataset is credited to Newton (1988).
-
-Below is a plot of the entire dataset.
-
-<img src="img/Daily-Female-Births-Dataset.png" width="700"/>
-
-Dataset has two columns: Date and Births.
-
-<img src="img/dataset_columns.png" width="600"/>
+<img src="img/1_dataframe.png" width="600"/>
 
 # Data Split
 
-We will split data into training and validation dataset to train our autoencoder.
+We will split data into training, validation and test datasets to train our autoencoder.
 
-And then we will represent the data as a list of tensors.
+```
+train_df, val_df = train_test_split(
+  normal_df,
+  test_size=0.15,
+  random_state=RANDOM_SEED
+)
 
-<img src="img/data_split.png" width="700"/>
+val_df, test_df = train_test_split(
+  val_df,
+  test_size=0.33, 
+  random_state=RANDOM_SEED
+)
+```
+
+And then we will represent the data as a list of tensors using this function.
+
+```
+def create_dataset(df):
+
+  dataset = []
+
+  sequences = df.astype(np.float32).to_numpy().tolist()
+
+  for ind, seq in enumerate(sequences):
+    if ind+2 > len(sequences)-1:
+      break
+
+    double_seq = sequences[ind] + sequences[ind+1]
+
+    triple_seq = double_seq + sequences[ind+2]
+
+    triple_seq = torch.tensor(triple_seq).unsqueeze(1).float()
+
+    dataset.append(triple_seq)
+
+  n_seq, seq_len, n_features = torch.stack(dataset).shape
+
+  return dataset, seq_len, n_features
+  ```
 
 # Abnormal data
 
