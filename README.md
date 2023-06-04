@@ -60,7 +60,7 @@ def create_dataset(df):
 
 Normal test dataset has 2198 examples, anomaly dataset has only 441 examples.
 
-We will use five functions to augment our anomaly data.
+We will use three functions to augment our anomaly data.
 
 ```
 def jitter(input_seq, sigma=8):
@@ -77,33 +77,6 @@ def scaling(input_seq):
 ```
 
 <img src="img/scaling.png" width="600"/>
-
-```
-def rotation(input_seq):
-  scale = np.random.choice([-0.8, 0.9], size=(input_seq.shape[0], input_seq.shape[1]))
-  flipped_seq = torch.flip(input_seq, [0, 1])
-  return np.multiply(flipped_seq, scale)
-```
-
-<img src="img/rotation.png" width="600"/>
-
-```
-def permutation(input_seq):
-  orig_steps = np.arange(input_seq.shape[0])
-
-  num_segs = np.random.randint(2, 7)
-  ret = np.zeros_like(input_seq)
-
-  splits = np.array_split(orig_steps, num_segs)
-  warp = np.concatenate(np.random.permutation(splits)).ravel()
-
-  for i in range(input_seq.shape[0]-1):
-    ret[i] = input_seq[warp[i]]
-  
-  return torch.tensor(ret).float()
-```
-
-<img src="img/permutation.png" width="600"/>
 
 ```
 def magnitude_warp(input_seq, sigma=0.3):
@@ -124,17 +97,17 @@ def magnitude_warp(input_seq, sigma=0.3):
  
 <img src="img/magnitude_warp.png" width="600"/>
 
-To augment our data we will apply three random functions to it.
+To augment our data we will shuffle aug_func_list and then apply all three functions.
 
 ```
 import random
 
 def sequence_augmentation(input_seq):
   ret = np.zeros_like(input_seq)
-  aug_func_list = [jitter, scaling, rotation, permutation, magnitude_warp]
+  aug_func_list = [jitter, scaling, magnitude_warp]
 
-  aug_funcs = random.choices(aug_func_list, k=3)
-  for func in aug_funcs:
+  random.shuffle(aug_func_list)
+  for func in aug_func_list:
     ret = func(input_seq)
   
   return ret
@@ -234,13 +207,14 @@ class RecurrentAutoencoder(nn.Module):
 
 # Training
 
-We will train our model on 50 epochs.
+We will train our model on 100 epochs.
 
-Loss on last epoch: train loss 149.87340367753606 val loss 138.49130286623966
+Loss on last epoch: train loss 88.83148236176078 val loss 69.62334083394063
 
 ```
-# 25 epochs -> train loss 180.47677663630532 val loss 183.84012266634377
-# 50 epochs -> train loss 149.87340367753606 val loss 138.49130286623966
+# Epoch 50: train loss 156.2315734545462 val loss 189.10611869270772
+# Epoch 75: train loss 100.44923457125962 val loss 166.5826284700006
+# Epoch 100: train loss 88.83148236176078 val loss 69.62334083394063
 model, history = train_model(
   model, 
   train_dataset, 
@@ -283,11 +257,11 @@ Plot losses distributions on anomaly data.
 
 <img src="img/anomaly_losses_distr.png" width="800"/>
 
-Our threshold will be 175.
+Our threshold will be 135.
 
-Correct normal predictions percantage: 0.8585077343039127
+Correct normal predictions percantage: 0.8867151956323931
 
-Correct anomaly predictions percantage: 0.8798908098271155
+Correct anomaly predictions percantage: 0.9071883530482256
 
 # Examples
 
